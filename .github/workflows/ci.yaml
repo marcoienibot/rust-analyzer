@@ -3,6 +3,7 @@
 
 name: CI
 on:
+  workflow_dispatch: # FORK TEST ONLY
   pull_request:
   merge_group:
 
@@ -82,7 +83,7 @@ jobs:
         run: "! (cargo tree -p proc-macro-srv-cli -p proc-macro-srv -p proc-macro-srv-cli -p proc-macro-api -i salsa)"
 
   rust:
-    if: github.repository == 'rust-lang/rust-analyzer'
+    if: github.repository == 'rust-lang/rust-analyzer' || github.event_name == 'workflow_dispatch' # FORK TEST ONLY
     name: Rust
     runs-on: ${{ matrix.os }}
     env:
@@ -94,6 +95,9 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
+      - name: FORK TEST ONLY - simulate a failing test
+        run: exit 1
+
       - name: Checkout repository
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
         with:
@@ -237,7 +241,7 @@ jobs:
 
   # Weird targets to catch non-portable code
   rust-cross:
-    if: github.repository == 'rust-lang/rust-analyzer'
+    if: github.repository == 'rust-lang/rust-analyzer' || github.event_name == 'workflow_dispatch' # FORK TEST ONLY
     name: Rust Cross
     runs-on: ubuntu-latest
 

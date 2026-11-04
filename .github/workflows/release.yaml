@@ -256,6 +256,7 @@ jobs:
       - run: ls -al ./dist
 
       - name: Publish Release
+        if: false # FORK TEST ONLY: never create a GitHub release
         uses: $/.github/actions/github-release
         with:
           files: "dist/*"
